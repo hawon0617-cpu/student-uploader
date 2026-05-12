@@ -59,11 +59,23 @@ if uploaded_file is not None:
             result["개인정보동의첨부파일제출여부"] = "Y"
 
             st.success("변환 완료!")
-            st.dataframe(result)
+
+            edited_result = st.data_editor(
+                result,
+                use_container_width=True,
+                hide_index=True,
+                num_rows="fixed"
+            )
 
             output = BytesIO()
+
             with pd.ExcelWriter(output, engine="openpyxl") as writer:
-                result.to_excel(writer, index=False, sheet_name="업로드용")
+                edited_result.to_excel(
+                    writer,
+                    index=False,
+                    sheet_name="업로드용"
+                )
+
             output.seek(0)
 
             st.download_button(
